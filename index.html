@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="stylesheet.css">
+		<meta charset="UTF-8">
+		<title> Screenshot Tools </title>
+	</head>
+
+	<body>
+		<div class="inactive" id="drag-file">
+			<div class="wrapper">
+				<img src="./resources/DragAndDrop_Icon.png">
+			</div>
+
+			<script>
+				(function () {
+					var holder = document.getElementById('drag-file');
+
+					holder.ondragover = () => {
+						holder.className = "active";
+						return false;
+					};
+
+					holder.ondragleave = () => {
+						holder.className = "inactive";
+						return false;
+					};
+
+					holder.ondragend = () => {
+						holder.className = "inactive";
+						return false;
+					};
+
+					holder.ondrop = (e) => {
+						holder.className = "inactive";
+						e.preventDefault();
+
+						for (let f of e.dataTransfer.files) {
+							console.log('File(s) you dragged here: ', f.path)
+						}
+
+						return false;
+					};
+				})();
+			</script>
+		</div>
+	</body>
+</html>

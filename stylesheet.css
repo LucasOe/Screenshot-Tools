@@ -1,0 +1,31 @@
+:root {
+	--gray:							#2C2F33;
+	--dark-gray:				#23272A;
+	--light-blue:				#99AAB5;
+	--white:						#FFFFFF;
+	--blue: 						#7289DA;
+}
+
+body {
+	margin: 						0px;
+}
+
+#drag-file {
+	position: 					absolute;
+	width: 							100%;
+	height: 						100%;
+	display: 						flex;
+	justify-content: 		center;
+}
+
+div.active {
+	background-color: 	var(--gray);
+}
+
+div.inactive {
+	background-color: 	var(--dark-gray);
+}
+
+div.wrapper {
+	align-self: 				center;
+}
