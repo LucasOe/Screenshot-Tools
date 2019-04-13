@@ -11,7 +11,7 @@
 			<div class="wrapper">
 				<img src="./resources/DragAndDrop_Icon.png">
 				<script>
-					//Display screenshots from selected game
+					//TODO: Display screenshots from selected game
 				</script>
 			</div>
 
@@ -47,6 +47,11 @@
 						//Convert the Files
 						convert(files);
 
+						//TODO: Dynamic Callback function
+						setTimeout(function afterTwoSeconds() {
+						  copy(files);
+						}, 5000);
+
 						return false;
 					};
 				})();
@@ -59,31 +64,48 @@
 						//Replace .\\ in settings.json with the directory path the image is located in
 						let fileDirectory = file.path.replace(file.name, "");
 						let directoryPath = getSettings().directoryPath.replace(".\\", fileDirectory);
-						console.log("DirectoryPath: " + directoryPath);
 
 						//Create directory if it doesn't exist
 						if (!fs.existsSync(directoryPath)){
-						   fs.mkdir(directoryPath);
+						   fs.mkdirSync(directoryPath);
 						}
 
 						//Remove file extension
 						let name = file.name.substr(0, file.name.lastIndexOf('.'));
 
+						//Convert Png to Jpg
 						if(file.type == "image/png") {
-							//Convert Png to Jpg
 							const pngToJpeg = require('png-to-jpeg');
 
 							let buffer = fs.readFileSync(file.path);
 							pngToJpeg({quality: 100})(buffer)
-							.then(output => fs.writeFileSync(directoryPath + "\\" + name + ".jpeg", output));
+							.then(output => fs.writeFileSync(directoryPath + "\\" + name + ".jpg", output));
 							console.log("Converted " + file.path + " to " + directoryPath);
+
+						//Move image to directoryPath
 						} else if(file.type == "image/jpeg") {
-							//Move image to directoryPath
-							fs.rename(file.path, directoryPath + "\\" + file.name, function (err) {
+							fs.copyFile(file.path, directoryPath + "\\" + file.name, function (err) {
 							  if (err) throw err;
 							  console.log("Moved " + file.path + " to " + directoryPath);
 							});
 						}
+					}
+				}
+
+				function copy(files) {
+					const fs = require('fs');
+
+					for(let file of files) {
+						//Replace .\\ in settings.json with the directory path the image is located in
+						let fileDirectory = file.path.replace(file.name, "");
+						let directoryPath = getSettings().directoryPath.replace(".\\", fileDirectory);
+
+						let name = file.name.substr(0, file.name.lastIndexOf('.'));
+
+						fs.copyFile(directoryPath + "\\" + name + ".jpg", directoryPath + "\\" + name + "_vr.jpg", function (err) {
+							if (err) throw err;
+							console.log("Copied " + directoryPath + "\\" + name + ".jpg" + " to " + directoryPath + "\\" + name + "_vr.jpg");
+						});
 					}
 				}
 
