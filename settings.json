@@ -1,13 +1,13 @@
 {
-  "directoryPath": "./converted",
+  "directoryPath": ".\\converted",
 	"games": [
 		{
 			"name": "The Witcher 3: Wild Hunt",
-			"path": "D:/Program Files (x86)/Steam/userdata/105870591/760/remote/292030/screenshots"
+			"path": "D:\\Program Files (x86)\\Steam\\userdata\\105870591\\760\\remote\\292030\\screenshots"
 		},
 		{
 			"name": "Fallout 4",
-			"path": "D:/Program Files (x86)/Steam/userdata/105870591/760/remote/377160/screenshots"
+			"path": "D:\\Program Files (x86)\\Steam\\userdata\\105870591\\760\\remote\\377160\\screenshots"
 		}
 	]
 }

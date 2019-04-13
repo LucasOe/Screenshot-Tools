@@ -44,8 +44,6 @@
 						for (let file of e.dataTransfer.files) {
 							files.push(file);
 						}
-						//Create the directory
-						createDir();
 						//Convert the Files
 						convert(files);
 
@@ -56,9 +54,18 @@
 				//Convert the Files
 				function convert(files) {
 					const fs = require('fs');
-					let directoryPath = getSettings().directoryPath;
 
 					for(let file of files) {
+						//Replace .\\ in settings.json with the directory path the image is located in
+						let fileDirectory = file.path.replace(file.name, "");
+						let directoryPath = getSettings().directoryPath.replace(".\\", fileDirectory);
+						console.log("DirectoryPath: " + directoryPath);
+
+						//Create directory if it doesn't exist
+						if (!fs.existsSync(directoryPath)){
+						   fs.mkdir(directoryPath);
+						}
+
 						//Remove file extension
 						let name = file.name.substr(0, file.name.lastIndexOf('.'));
 
@@ -68,25 +75,15 @@
 
 							let buffer = fs.readFileSync(file.path);
 							pngToJpeg({quality: 100})(buffer)
-							.then(output => fs.writeFileSync(directoryPath + "/" + name + ".jpeg", output));
+							.then(output => fs.writeFileSync(directoryPath + "\\" + name + ".jpeg", output));
 							console.log("Converted " + file.path + " to " + directoryPath);
 						} else if(file.type == "image/jpeg") {
 							//Move image to directoryPath
-							fs.rename(file.path, directoryPath + "/" + file.name, function (err) {
+							fs.rename(file.path, directoryPath + "\\" + file.name, function (err) {
 							  if (err) throw err;
 							  console.log("Moved " + file.path + " to " + directoryPath);
 							});
 						}
-					}
-				}
-
-				function createDir() {
-					const fs = require('fs');
-					let directoryPath = getSettings().directoryPath;
-
-					//Create directory if it doesn't exist
-					if (!fs.existsSync(directoryPath)){
-					   fs.mkdirSync(directoryPath);
 					}
 				}
 
