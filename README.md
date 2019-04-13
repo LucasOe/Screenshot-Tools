@@ -10,6 +10,3 @@ A small tool to make uploading screenshots to Steam easier.
 * Drag and drop the images you want to upload into the programm. The tool will create a new folder where your images are named *converted*. There you will find each image two time as a *.jpg*. 
 * Open the screenshot window in Steam and selct "Show on disk". Now move all the converted screenshots you want to upload here.
 * Restart Steam
-
-**Note:**
-Creating GUIs in Java is annoying, that's why I kept it as simple as possible.
