@@ -1,14 +1,15 @@
 {
-  "name": "your-app",
+  "name": "Screenshot-Tools",
   "version": "0.1.0",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "author": "",
+  "author": "LucasOe",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "electron": "^4.1.4"
+    "electron": "^4.1.4",
+    "png-to-jpeg": "^1.0.1"
   }
 }

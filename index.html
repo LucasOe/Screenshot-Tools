@@ -3,17 +3,22 @@
 	<head>
 		<link rel="stylesheet" href="stylesheet.css">
 		<meta charset="UTF-8">
-		<title> Screenshot Tools </title>
+		<title> Screenshot-Tools </title>
 	</head>
 
 	<body>
 		<div class="inactive" id="drag-file">
 			<div class="wrapper">
 				<img src="./resources/DragAndDrop_Icon.png">
+				<script>
+					//Display screenshots from selected game
+				</script>
 			</div>
 
 			<script>
+				//Drag and Drop
 				(function () {
+					var files = []; //Array with dropped files
 					var holder = document.getElementById('drag-file');
 
 					holder.ondragover = () => {
@@ -35,13 +40,78 @@
 						holder.className = "inactive";
 						e.preventDefault();
 
-						for (let f of e.dataTransfer.files) {
-							console.log('File(s) you dragged here: ', f.path)
+						//Add Files to Array
+						for (let file of e.dataTransfer.files) {
+							files.push(file);
 						}
+						//Create the directory
+						createDir();
+						//Convert the Files
+						convert(files);
 
 						return false;
 					};
 				})();
+
+				//Convert the Files
+				function convert(files) {
+					const fs = require('fs');
+					let directoryPath = getSettings().directoryPath;
+
+					for(let file of files) {
+						//Remove file extension
+						let name = file.name.substr(0, file.name.lastIndexOf('.'));
+
+						if(file.type == "image/png") {
+							//Convert Png to Jpg
+							const pngToJpeg = require('png-to-jpeg');
+
+							let buffer = fs.readFileSync(file.path);
+							pngToJpeg({quality: 100})(buffer)
+							.then(output => fs.writeFileSync(directoryPath + "/" + name + ".jpeg", output));
+							console.log("Converted " + file.path + " to " + directoryPath);
+						} else if(file.type == "image/jpeg") {
+							//Move image to directoryPath
+							fs.rename(file.path, directoryPath + "/" + file.name, function (err) {
+							  if (err) throw err;
+							  console.log("Moved " + file.path + " to " + directoryPath);
+							});
+						}
+					}
+				}
+
+				function createDir() {
+					const fs = require('fs');
+					let directoryPath = getSettings().directoryPath;
+
+					//Create directory if it doesn't exist
+					if (!fs.existsSync(directoryPath)){
+					   fs.mkdirSync(directoryPath);
+					}
+				}
+
+				//Print Files Array
+				function printFiles(files) {
+					console.log('Files Array:');
+					for(let file of files) {
+						console.log(file.path);
+					}
+				}
+
+				//Print the Settings
+				function printSettings() {
+					let settings = getSettings();
+					console.log('DirectoryPath: ', settings.directoryPath);
+					console.log('Games: ', settings.games);
+				}
+
+				//Read Settings
+				function getSettings() {
+					const fs = require('fs');
+					let settings = fs.readFileSync('settings.json');
+					return JSON.parse(settings);
+				}
+
 			</script>
 		</div>
 	</body>
